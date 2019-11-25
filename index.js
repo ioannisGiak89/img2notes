@@ -7,13 +7,17 @@ const rekognition = new aws.Rekognition({
     region: 'eu-west-1'
 });
 
-fs.readFile('IMG_20191123_121235.jpg', function(err, imageBytes) {
+const image = 'IMG_20191123_121235.jpg';
+
+fs.readFile(image, function(err, imageBytes) {
     if (err) throw err; // Fail if the file can't be read.
     rekognition.detectText({Image: {
         Bytes: imageBytes
     }}).promise()
         .then(response => {
-            const lines = _.filter(response.TextDetections, testDetection => testDetection.Type ===  'LINE');
+            const lines = _.filter(response.TextDetections, testDetection => testDetection.Type === 'LINE');
+            console.log(`Image: ${image}`);
+            console.log("---------------");
             _.forEach(lines, line => console.log(line.DetectedText));
         })
         .catch(err => console.error(err));
